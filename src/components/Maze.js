@@ -11,7 +11,9 @@ class Maze extends Component {
     return (
       <div className="container">
         <div className="row">
-          <h1>Buttons</h1>
+        <input type="number" ref="input_size"/>
+        <button className="btn">Init Maze</button>
+        <button className="btn">Resolve Maze</button>
         </div>
         <div>
           {this.renderMaze()}
