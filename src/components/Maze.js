@@ -6,7 +6,7 @@ class Maze extends Component {
     super(props);
 
     this.state = {
-      size: 1,
+      size: 3,
       mazeData: {},
       running: false,
       currentPos: [0, 0]
@@ -57,7 +57,7 @@ class Maze extends Component {
       <div className="container">
         <div style={{display:'flex', justifyContent:'center', alignItems:"center"}}>
           <div className="input-field" style={{flex:"1", marginRight:"1em"}}>
-            <input id="size" type="number" min="1" max="100" value={this.state.size} onChange={this.onInputChange}/>
+            <input id="size" type="number" min="3" step="2" max="100" value={this.state.size} onChange={this.onInputChange}/>
             <label htmlFor="size" className="active">Maze size:</label>
           </div>
           <div style={{flex:"1"}}>
