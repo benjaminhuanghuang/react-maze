@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
+//
+import { createMaze } from "../actions/index";
 
 class MazeCanvas extends Component {
   
@@ -7,47 +10,18 @@ class MazeCanvas extends Component {
 
     this.state = {
       size: 3,
-      mazeData: [],
       running: false,
       currentPos: [0, 0]
     }
 
-    this.onInitClick = this.onInitClick.bind(this);
+    this.onCreateClick = this.onCreateClick.bind(this);
     this.onResolveClick = this.onResolveClick.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
   }
 
-  createMockMaze(){
-    return [[0,1,1,1],
-            [0,0,0,1],
-            [0,1,0,0]
-            ];
-  }
-  initMaze() {
-    console.log("size", this.state.size);
-    let newMaze = this.createMockMaze();
-    this.setState({mazeData:newMaze});
-    console.log();
-  }
-
-  resolveMaze()
-  {
-    this.setState({running:true});
-
-    let x = 0;
-    let y = 0;
-    this.setState({currentPos:[x, y]});
-    
-  }
+  
   renderMaze() {
-    return this.state.mazeData.map((row, rowIndex)=>
-    {
-        return (
-          <div key={rowIndex}>
-            {this.renderRow(row)}
-          </div>
-        );
-    });
+    return <h2>Please init the maze </h2>;
   }
   renderRow(row)
   { 
@@ -65,15 +39,13 @@ class MazeCanvas extends Component {
     this.setState({ size: event.target.value });
   }
   
-  onInitClick()
+  onCreateClick()
   {
-    //console.log("onInitClick ", this.state);
-    this.initMaze()
+    this.props.createMaze(this.state.size);
   }
 
   onResolveClick()
   {
-    //console.log("onResolveClick ", this.state);
     this.resolveMaze();
   }
 
@@ -85,8 +57,8 @@ class MazeCanvas extends Component {
             <input id="size" type="number" min="3" step="2" max="100" value={this.state.size} onChange={this.onInputChange}/>
             <label htmlFor="size" className="active">Maze size:</label>
           </div>
-          <div style={{flex:"1"}}>
-            <button className="waves-effect waves-light btn" onClick={this.onInitClick}>Init</button>
+          <div style={{flex:"2"}}>
+            <button className="waves-effect waves-light btn" onClick={this.onCreateClick}>Init</button>
           </div>
           <div style={{flex:"5"}}>
             <button className="waves-effect waves-light btn" onClick={this.onResolveClick}>Resolve</button>
@@ -100,4 +72,8 @@ class MazeCanvas extends Component {
   }
 }
 
-export default MazeCanvas;
+function mapStateToProps(state) {
+  return { mazeData: state.mazeData };
+}
+
+export default connect(mapStateToProps, {createMaze})(MazeCanvas);

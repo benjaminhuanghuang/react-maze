@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+//
 import { createMaze } from "../actions/index";
 
 class Maze extends Component {
@@ -12,7 +13,7 @@ class Maze extends Component {
       currentPos: [0, 0]
     };
 
-    this.onInitClick = this.onInitClick.bind(this);
+    this.onCreateClick = this.onCreateClick.bind(this);
     this.onResolveClick = this.onResolveClick.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
   }
@@ -75,9 +76,9 @@ class Maze extends Component {
     this.setState({ size: event.target.value });
   }
 
-  onInitClick() {
+  onCreateClick() {
     //console.log("onInitClick ", this.state);
-    this.props.createMaze(this.state.term);
+    this.props.createMaze(this.state.size);
   }
 
   onResolveClick() {
@@ -94,9 +95,9 @@ class Maze extends Component {
               onChange={this.onInputChange} />
             <label htmlFor="size" className="active"> Maze size:</label>
           </div>
-          <div style={{ flex: "1" }}>
-            <button className="waves-effect waves-light btn" onClick={this.onInitClick}>
-              Init
+          <div style={{ flex: "2" }}>
+            <button className="waves-effect waves-light btn" onClick={this.onCreateClick}>
+              Crete Maze
             </button>
           </div>
           <div style={{ flex: "5" }}>
