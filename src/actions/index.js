@@ -14,7 +14,8 @@ function createMazeData(size) {
   mazeMap[0][0] = 0;
   mazeMap[size - 1][size - 1] = 0;
   
-  let pathStack = [{x:0, y:0}];
+  let pathStack = [{row:0, col:0}];
+  let solution = [];
   while(pathStack.length > 0)
   {
     let currPos = pathStack.pop();
@@ -23,13 +24,14 @@ function createMazeData(size) {
     { 
       pathStack.push(currPos);
       pathStack.push(nextPos);
-      if(nextPos.x === mazeMap[0].length-1 && nextPos.y === mazeMap.length)
-        {
-          break;  
-        }
+      if(nextPos.col === mazeMap[0].length-1 && nextPos.row === mazeMap.length-1)
+      {
+        solution= [...pathStack];
+        break;  
+      }
     }
   }
-  return { mazeMap, solution: pathStack };
+  return { mazeMap, solution};
 }
 
 function initMatrix(size, value) {
@@ -51,10 +53,10 @@ function getNextPositionRandomly(mazeMap, pos)
 
   for(let dir of dirs){
     let nextPos = getNextPosition(pos, dir);
-    if (checkPosition(mazeMap, nextPos))
+    if (checkPosition(mazeMap, pos, nextPos))
     {
-      mazeMap[nextPos.y][nextPos.x] = 0;
-      return nextPos
+      mazeMap[nextPos.row][nextPos.col] = 0;
+      return nextPos;
     }
   }
   return null;
@@ -62,41 +64,50 @@ function getNextPositionRandomly(mazeMap, pos)
 
 function getNextPosition(pos, direction)
 {
-  let { x, y } = pos;
+  let { row, col } = pos;
   if (direction === 0)  // Top
-      y -= 1;
+      row -= 1;
   else if (direction === 1)  // Right
-      x += 1;
+      col += 1;
   else if (direction === 2)  // Bottom
-      y += 1;
+      row += 1;
   else if (direction === 3)  // Left
-      x -= 1;
-  return { x, y };
+      col -= 1;
+  return { row, col };
 }
 
-function checkPosition(mazeMap, pos) {
-  let row = pos.y;
-  let col = pos.x;
+function checkPosition(mazeMap, pos, nexPos) {
+  let {row, col} = nexPos;
 
-  if (row <=0 || row >= mazeMap.length-1 || col <=0 || col >= mazeMap[0].length-1)
+  if (row === mazeMap.length-1 && col === mazeMap[0].length-1)
+    return true;
+  
+  if (row <0 || row > mazeMap.length-1 || col <0 || col > mazeMap[0].length-1)
     return false;
-
+  
   if (mazeMap[row][col] === 0) {
-    // already visited
     return false;
   }
 
-  if (mazeMap[row-1][col-1] === 0 ||
-      mazeMap[row-1][col] === 0 ||
-      mazeMap[row-1][col+1] === 0 ||
-      mazeMap[row][col-1] === 0 ||
-      mazeMap[row][col+1] === 0 ||
-      mazeMap[row+1][col+1] === 0 ||
-      mazeMap[row+1][col] === 0 ||
-      mazeMap[row+1][col+1] === 0)
-    {
+  let offsets = [[-1,0], // Top
+                [0,-1], // Left
+                [0,1],  // right
+                [1,0]]; // Bottom
+
+  for (let offset of offsets)
+  {
+    let adjacentRow = row + offset[0];
+    let adjacentCol = col + offset[1];
+    if (adjacentRow === mazeMap.length-1 && adjacentCol === mazeMap[0].length-1)
+      return true;
+    if (adjacentRow<0 || adjacentRow > mazeMap.length-1 || adjacentCol <0 || adjacentCol > mazeMap[0].length-1)
+      continue;
+    if(adjacentRow === pos.row && adjacentCol=== pos.col)
+      continue;
+    if (mazeMap[adjacentRow][adjacentCol] === 0)
       return false;
-    }
+  }
+  return true;
 }
 
 function shuffleArray(array) {

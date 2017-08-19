@@ -9,7 +9,7 @@ class Maze extends Component {
 
     this.state = {
       size: 5,
-      running: false,
+      showPath: false,
       currentPos: [0, 0]
     };
 
@@ -19,11 +19,7 @@ class Maze extends Component {
   }
 
   resolveMaze() {
-    this.setState({ running: true });
-
-    let x = 0;
-    let y = 0;
-    this.setState({ currentPos: [x, y] });
+    this.setState({ showPath: true });
   }
 
   renderMaze() {
@@ -55,17 +51,34 @@ class Maze extends Component {
       if (cell === 1)
         return this.renderWall(colIndex);
       else 
-        return this.renderSpace(colIndex);
+      {
+        if (this.inPath(rowIndex, colIndex) && this.state.showPath)
+          return this.renderPath(colIndex);
+        else
+          return this.renderSpace(colIndex);
+      } 
     });
     return( 
       <div key={rowIndex} style={{ display:"flex", justifyContent: "center", alignItems: "center" }}> 
         {[this.renderWall(-1), ...cells, this.renderWall(row.length)]}
       </div>);
   }
-
+  inPath(row, col)
+  {
+    for (let cell of this.props.solution)
+      {
+        if(cell.row === row && cell.col===col)
+          return true;
+      }
+      return false;
+  }
+  renderPath(key)
+  {
+    return <div key={key} style={{ backgroundColor: "blue", width:"20px", height:"20px", borderColor:"blue" }} />;
+  }
   renderSpace(key)
   {
-    return <div key={key} style={{ backgroundColor: "yellow", width:"20px", height:"20px", borderColor:"blue" }} />;
+    return <div key={key} style={{ backgroundColor: "white", width:"20px", height:"20px", borderColor:"blue" }} />;
   }
 
   renderWall(key)
@@ -79,6 +92,7 @@ class Maze extends Component {
 
   onCreateClick() {
     //console.log("onInitClick ", this.state);
+    this.setState({ showPath: false });
     this.props.createMaze(this.state.size);
   }
 
