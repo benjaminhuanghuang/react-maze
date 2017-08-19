@@ -88,10 +88,10 @@ class Maze extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div>
         <div style={{ display:"flex", justifyContent: "center", alignItems: "center" }}>
           <div className="input-field" style={{ flex: "1", marginRight: "1em" }}>
-            <input id="size" type="number" min="3" step="2" max="100" value={this.state.size}
+            <input id="size" type="number" min="3" step="2" max="50" value={this.state.size}
               onChange={this.onInputChange} />
             <label htmlFor="size" className="active"> Maze size:</label>
           </div>
