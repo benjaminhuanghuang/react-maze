@@ -27,26 +27,27 @@ class Maze extends Component {
   }
 
   renderMaze() {
-    if (this.props.mazeData) {
-      let rows =  this.props.mazeData.map((row, rowIndex) => {
+    if (this.props.mazeMap) {
+      let rows =  this.props.mazeMap.map((row, rowIndex) => {
         return this.renderRow(row, rowIndex);
       });
       return [this.renderTopBorder(), ...rows, this.renderBottomBorder()];
     }
     return <h2>Please init the maze </h2>;
   }
+
   renderTopBorder() {
     let border = [0];
-    for (let i = 0; i< this.props.mazeData.length-1; i++)
+    for (let i = 0; i< this.props.mazeMap.length-1; i++)
       border.push(1);
     return this.renderRow(border, -1);
   }
   renderBottomBorder() {
     let border = [];
-    for (let i = 0; i< this.props.mazeData.length-1; i++)
+    for (let i = 0; i< this.props.mazeMap.length-1; i++)
       border.push(1);
     border.push(0);
-    return this.renderRow(border, this.props.mazeData.length);
+    return this.renderRow(border, this.props.mazeMap.length);
   }
     
   renderRow(row, rowIndex) {
@@ -115,7 +116,7 @@ class Maze extends Component {
 }
 
 function mapStateToProps(state) {
-  return { mazeData: state.mazeData };
+  return { mazeMap: state.mazeData.mazeMap, solution: state.mazeData.solution};
 }
 
 export default connect(mapStateToProps, {createMaze})(Maze);

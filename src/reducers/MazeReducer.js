@@ -1,6 +1,6 @@
 import { CREATE_MAZE, RESOLVE_MAZE } from "../actions/types";
 
-export default function(state=null, action) {
+export default function(state=defaultState, action) {
   switch (action.type) {
     case CREATE_MAZE:
       return action.payload;
@@ -11,4 +11,9 @@ export default function(state=null, action) {
     default:
       return state;
   }
+}
+
+const defaultState = {
+  mazeMap:null,
+  solution:[]
 }
