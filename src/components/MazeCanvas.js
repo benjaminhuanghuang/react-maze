@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-class MazeKonva extends Component {
+class MazeCanvas extends Component {
   
   constructor(props) {
     super(props);
@@ -26,7 +26,6 @@ class MazeKonva extends Component {
   initMaze() {
     console.log("size", this.state.size);
     let newMaze = this.createMockMaze();
-    debugger;
     this.setState({mazeData:newMaze});
     console.log();
   }
@@ -41,7 +40,6 @@ class MazeKonva extends Component {
     
   }
   renderMaze() {
-    debugger;
     return this.state.mazeData.map((row, rowIndex)=>
     {
         return (
@@ -102,4 +100,4 @@ class MazeKonva extends Component {
   }
 }
 
-export default Maze;
+export default MazeCanvas;

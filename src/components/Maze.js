@@ -7,7 +7,7 @@ class Maze extends Component {
     super(props);
 
     this.state = {
-      size: 3,
+      size: 5,
       running: false,
       currentPos: [0, 0]
     };
@@ -27,22 +27,48 @@ class Maze extends Component {
 
   renderMaze() {
     if (this.props.mazeData) {
-      return this.props.mazeData.map((row, rowIndex) => {
-        return (
-          <div key={rowIndex} style={{ display: "inline"}}>
-            {this.renderRow(row)}
-          </div>
-        );
+      let rows =  this.props.mazeData.map((row, rowIndex) => {
+        return this.renderRow(row, rowIndex);
       });
+      return [this.renderTopBorder(), ...rows, this.renderBottomBorder()];
     }
     return <h2>Please init the maze </h2>;
   }
-  renderRow(row) {
-    return row.map((cell, colIndex) => {
+  renderTopBorder() {
+    let border = [0];
+    for (let i = 0; i< this.props.mazeData.length-1; i++)
+      border.push(1);
+    return this.renderRow(border, -1);
+  }
+  renderBottomBorder() {
+    let border = [];
+    for (let i = 0; i< this.props.mazeData.length-1; i++)
+      border.push(1);
+    border.push(0);
+    return this.renderRow(border, this.props.mazeData.length);
+  }
+    
+  renderRow(row, rowIndex) {
+    let cells = row.map((cell, colIndex) => {
       if (cell === 1)
-        return <div key={colIndex} style={{ backgroundColor: "black", width:"20px", height:"20px" }} />;
-      else return <div key={colIndex} style={{ backgroundColor: "red" , width:"20px", height:"20px" }} />;
+        return this.renderWall(colIndex);
+      else 
+        return this.renderSpace(colIndex);
     });
+    return( 
+      <div key={rowIndex} style={{ display:"flex", justifyContent: "center", alignItems: "center" }}> 
+        {[this.renderWall(-1), ...cells, this.renderWall(row.length)]}
+      </div>);
+  }
+
+  renderSpace(key)
+  {
+    return <div key={key} style={{ backgroundColor: "yellow", width:"20px", height:"20px", borderColor:"blue" }} />;
+  }
+
+  renderWall(key)
+  {
+    return <div key={key} style={{ backgroundColor: "black" , width:"20px", height:"20px" }} />;
   }
 
   onInputChange(event) {
