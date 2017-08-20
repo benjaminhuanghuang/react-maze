@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 //
 import { createMaze } from "../actions/index";
+import MazeBoard from './MazeBoard';
 
 class MazeCanvas extends Component {
   
@@ -9,9 +10,7 @@ class MazeCanvas extends Component {
     super(props);
 
     this.state = {
-      size: 3,
-      running: false,
-      currentPos: [0, 0]
+      size: 3
     }
 
     this.onCreateClick = this.onCreateClick.bind(this);
@@ -19,20 +18,26 @@ class MazeCanvas extends Component {
     this.onInputChange = this.onInputChange.bind(this);
   }
 
+  componentWillMount() {
+    let height = window.innerHeight;
+    let width = window.innerWidth;
+    let boardSize = (height < width) ? height * .8 : width * .8;
+    let unit = boardSize / this.state.size;
+   
+    this.setState({
+      boardSize,
+      unit
+    })
+  }
   
   renderMaze() {
+    if (this.props.mazeMap) {
+      let rows =  this.props.mazeMap.map((row, rowIndex) => {
+        return this.renderRow(row, rowIndex);
+      });
+      return [this.renderTopBorder(), ...rows, this.renderBottomBorder()];
+    }
     return <h2>Please init the maze </h2>;
-  }
-  renderRow(row)
-  { 
-    return (
-      row.map((cell, colIndex)=>{
-        if(cell===1)
-          return (<div key={colIndex} style={{backgroundColor:'black'}}/>);
-        else
-          return (<div key={colIndex} style={{backgroundColor:'white'}}/>);
-      })
-    );
   }
 
   onInputChange(event) {
@@ -65,7 +70,8 @@ class MazeCanvas extends Component {
           </div>
         </div>
         <div>
-          {this.renderMaze()}
+          <MazeBoard mazeMap = {this.props.mazeMap} unit={this.state.unit} 
+              size= {this.state.size} boardSize={this.state.boardSize}/>
         </div>
       </div>
     );
@@ -73,7 +79,6 @@ class MazeCanvas extends Component {
 }
 
 function mapStateToProps(state) {
-  return { mazeData: state.mazeData };
+  return { mazeMap: state.mazeData.mazeMap, solution: state.mazeData.solution};
 }
-
 export default connect(mapStateToProps, {createMaze})(MazeCanvas);
